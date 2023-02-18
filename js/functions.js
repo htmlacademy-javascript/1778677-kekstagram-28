@@ -19,4 +19,15 @@ function isPalindrome(str){
 
 }
 
+function extractNumber(string){
+  let newString = '';
+
+  for(let i = 0; i < string.length; i++){
+    if(Number.isInteger(parseInt(string[i], 10))){
+      newString = newString + string[i];
+    }
+
+  }
+  return (newString.toString() !== '') ? `Результат: число ${newString}` : 'Результат: NaN';
+}
 
