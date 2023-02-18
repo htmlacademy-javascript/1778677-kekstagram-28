@@ -31,3 +31,14 @@ function extractNumber(string){
   return (newString.toString() !== '') ? `Результат: число ${newString}` : 'Результат: NaN';
 }
 
+function changeString(string, minLength, addedCharacters){
+  while(string.length < minLength){
+    if(addedCharacters.length > minLength){
+      addedCharacters = addedCharacters.slice(0, minLength - 1);
+      string = addedCharacters + string;
+    } else {
+      string = ((addedCharacters + string).length <= minLength) ? addedCharacters + string : addedCharacters.slice(0, (addedCharacters + string).length - minLength) + string;
+    }
+  }
+  return string;
+}
