@@ -40,5 +40,6 @@ function changeString(string, minLength, addedCharacters){
       string = ((addedCharacters + string).length <= minLength) ? addedCharacters + string : addedCharacters.slice(0, (addedCharacters + string).length - minLength) + string;
     }
   }
-  return string;
+  return `Результат: строка '${string}'`;
 }
+
