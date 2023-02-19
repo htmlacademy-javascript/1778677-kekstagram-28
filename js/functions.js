@@ -43,3 +43,8 @@ function changeString(string, minLength, addedCharacters){
   return `Результат: строка '${string}'`;
 }
 
+checkLengthString('проверяемая строка', 20);
+isPalindrome('Довод');
+extractNumber('2023 год');
+changeString('q', 4, 'we');
+
