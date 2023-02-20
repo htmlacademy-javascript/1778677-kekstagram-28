@@ -1,20 +1,20 @@
 //Функция для проверки длины строки
 function checkLengthString(str, len){
-  return (String(str).length <= len) ? 'true - строка проходит по длине' : 'false — строка не проходит';
+  return String(str).length <= len;
 }
 
 function isPalindrome(str){
   for(let i = 0; i < str.length / 2; i++){
     if(str[i].toLowerCase() !== str[str.length - 1 - i].toLowerCase()){
-      return 'false - это не палиндром';
+      return false;
     }
   }
   for(let i = 0; i < str.length / 2; i++){
     if(str[i] !== str[str.length - 1 - i]){
-      return 'true - несмотря на разный регистр, тоже палиндром';
+      return true;
     }
   }
-  return 'true - строка является палиндромом';
+  return true ;
 
 
 }
@@ -28,7 +28,7 @@ function extractNumber(string){
     }
 
   }
-  return (newString.toString() !== '') ? `Результат: число ${newString}` : 'Результат: NaN';
+  return (newString.toString() !== '') ? newString : NaN;
 }
 
 function changeString(string, minLength, addedCharacters){
@@ -40,7 +40,7 @@ function changeString(string, minLength, addedCharacters){
       string = ((addedCharacters + string).length <= minLength) ? addedCharacters + string : addedCharacters.slice(0, (addedCharacters + string).length - minLength) + string;
     }
   }
-  return `Результат: строка '${string}'`;
+  return string;
 }
 
 checkLengthString('проверяемая строка', 20);
