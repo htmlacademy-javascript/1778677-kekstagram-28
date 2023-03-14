@@ -5,6 +5,7 @@ const MIN_LIKES = 15;
 const MAX_LIKES = 200;
 const MIN_AVATAR = 1;
 const MAX_AVATAR = 6;
+const COMMENT_COUNT = 50;
 const NAMES = [
   'Илья',
   'Ульяна',
@@ -60,17 +61,24 @@ const generateId = createIdGenerator();
 const generateCommentId = createIdGenerator();
 const generateUrl = createIdGenerator();
 
+const createComment = () => ({
+  id: generateCommentId(),
+  avatar: `img/avatar-${getRandomInteger(MIN_AVATAR, MAX_AVATAR)}.svg`,
+  message: getRandomArrayElement(MESSAGES),
+  name: getRandomArrayElement(NAMES),
+}
+
+)
+
 const createFotoDescriptionObject = () => ({
   id: generateId(),
   url: `photos/${generateUrl()}.jpg`,
   description: getRandomArrayElement(DESCRIPTION),
   likes: getRandomInteger(MIN_LIKES, MAX_LIKES),
-  comments: {
-    id: generateCommentId(),
-    avatar: `img/avatar-${getRandomInteger(MIN_AVATAR, MAX_AVATAR)}.svg`,
-    message: getRandomArrayElement(MESSAGES),
-    name: getRandomArrayElement(NAMES),
-  },
+  comments: Array.from({
+    length: getRandomInteger(0, COMMENT_COUNT)},
+  createComment
+  ),
 });
 
 
