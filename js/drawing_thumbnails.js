@@ -7,7 +7,6 @@ const thumbnails = getFotoDescriptionObjects();
 
 const renderThumbnail = () => {
   const thumbnailFragment = document.createDocumentFragment();
-
   thumbnails.forEach(({comments, description, likes, url, id}) => {
     const thumbnailElement = thumbnailTemplate.cloneNode(true);
     thumbnailContainer.appendChild(thumbnailElement);
@@ -19,11 +18,10 @@ const renderThumbnail = () => {
   });
 
   thumbnailContainer.appendChild(thumbnailFragment);
-  return thumbnails;
 };
 
 
 renderThumbnail();
 
-export {renderThumbnail};
+export {thumbnails};
 

@@ -1,13 +1,12 @@
 import {isEscapeKey} from './util.js';
 import {renderBigPicture} from './big_picture.js';
-import { renderThumbnail } from './drawing_thumbnails.js';
+import {thumbnails} from './drawing_thumbnails.js';
 
 const bigPicture = document.querySelector('.big-picture');
 
 
 const thumbnailContainer = document.querySelector('.pictures');
 const thumbnailOpenElements = thumbnailContainer.querySelectorAll('.picture');
-const thumbnails = renderThumbnail();
 const bigPictureCloseElement = document.querySelector('.big-picture__cancel');
 
 const onDocumentKeydown = (evt) => {
@@ -17,15 +16,11 @@ const onDocumentKeydown = (evt) => {
   }
 };
 
-function openThumbnailElement (element){
+const openThumbnailElement = (element) => {
   bigPicture.classList.remove('hidden');
-
-  const picture = Array.from(thumbnailOpenElements).find(
-    (item) => item.id === Number(element.querySelector('img').dataset.thumbnailId));
-
-  console.log(picture);
-
-  renderBigPicture(element);
+  const picture = thumbnails.find(
+    (item) => Number(item.id) === Number(element.dataset.thumbnailId));
+  renderBigPicture(picture);
   const commentCount = document.querySelector('.social__comment-count');
   commentCount.classList.add('hidden');
   const commentsLoader = document.querySelector('.comments-loader');
@@ -33,10 +28,10 @@ function openThumbnailElement (element){
   document.body.classList.add('modal-open');
 
   document.addEventListener('keydown', onDocumentKeydown);
-}
+};
 
 
-function closeBigPictureElement (){
+function closeBigPictureElement(){
   bigPicture.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
