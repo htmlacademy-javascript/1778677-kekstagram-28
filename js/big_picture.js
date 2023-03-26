@@ -1,4 +1,4 @@
-
+const COUNT_COMMENT_BLOCK = 5;
 const bigPictureContainer = document.querySelector('.big-picture');
 const bigPictureElement = bigPictureContainer.querySelector('.big-picture__img');
 const bigPictureImage = bigPictureElement.querySelector('img');
@@ -9,7 +9,6 @@ const bigPictureDescription = bigPictureContainer.querySelector('.social__captio
 const commentTemplate = document.querySelector('#social__comments').content.querySelector('.social__comment');
 const commentsLoaderButton = document.querySelector('.comments-loader');
 const commentCount = document.querySelector('.social__comment-count');
-const COUNT_COMMENT_BLOCK = 5;
 let commentLoaded = 0;
 let commentsArray = [];
 
@@ -41,14 +40,14 @@ const renderComment = (comments) =>{
 };
 
 
-const renderBigPicture = (picture) =>{
-  bigPictureImage.src = picture.url;
-  likesCount.textContent = picture.likes;
-  commentsCount.textContent = picture.comments.length;
-  bigPictureDescription.textContent = picture.description;
-  commentsArray = picture.comments;
+const renderBigPicture = ({url, likes, comments, description}) =>{
+  bigPictureImage.src = url;
+  likesCount.textContent = likes;
+  commentsCount.textContent = comments.length;
+  bigPictureDescription.textContent = description;
+  commentsArray = comments;
   commentLoaded = 0;
-  renderComment(picture.comments);
+  renderComment(comments);
   commentsLoaderButton.classList.remove('hidden');
 
 };
