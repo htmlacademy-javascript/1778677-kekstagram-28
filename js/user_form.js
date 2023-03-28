@@ -1,4 +1,6 @@
 import {isEscapeKey} from './util.js';
+import { resetScale } from './scale.js';
+import { resetEffects } from './effect.js';
 
 const MAX_LENGTH_COMMENT = 140;
 const MAX_HASHTAG_COUNT = 5;
@@ -41,6 +43,8 @@ function closeEditForm() {
   document.removeEventListener('keydown', onDocumentKeydown);
   editForm.reset();
   pristine.reset();
+  resetScale();
+  resetEffects();
 }
 
 
