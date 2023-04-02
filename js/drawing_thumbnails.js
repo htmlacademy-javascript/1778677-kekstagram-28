@@ -1,13 +1,8 @@
-import {getFotoDescriptionObjects} from './data.js';
-
-const thumbnailContainer = document.querySelector('.pictures');
 const thumbnailTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
-const thumbnails = getFotoDescriptionObjects();
-
-const renderThumbnail = () => {
+const renderThumbnails = (pictures, thumbnailContainer) => {
   const thumbnailFragment = document.createDocumentFragment();
-  thumbnails.forEach(({comments, description, likes, url, id}) => {
+  pictures.forEach(({comments, description, likes, url, id}) => {
     const thumbnailElement = thumbnailTemplate.cloneNode(true);
     thumbnailContainer.appendChild(thumbnailElement);
     thumbnailElement.querySelector('.picture__img').src = url;
@@ -18,10 +13,8 @@ const renderThumbnail = () => {
   });
 
   thumbnailContainer.appendChild(thumbnailFragment);
+
 };
 
-
-renderThumbnail();
-
-export {thumbnails};
+export {renderThumbnails};
 
