@@ -1,6 +1,7 @@
 import {isEscapeKey} from './util.js';
 import { resetScale } from './scale.js';
 import { resetEffects } from './effect.js';
+import {sendData} from './api.js';
 
 const MAX_LENGTH_COMMENT = 140;
 const MAX_HASHTAG_COUNT = 5;
@@ -17,9 +18,22 @@ const hashtagErrors = {
   errorCount : 'нельзя указать больше пяти хэш-тегов',
   errorUnique: 'хэш-теги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом, один и тот же хэш-тег не может быть использован дважды',
 };
+const submitButton = editForm.querySelector('.img-upload__submit');
+
+const successTemplate = document.querySelector('#success').content.querySelector('.success');
+
+const errorTemplate = document.querySelector('#error').content.querySelector('.error');
+
+const SubmitButtonText = {
+  IDLE: 'ОПУБЛИКОВАТЬ',
+  SENDING: 'ПУБЛИКУЮ...'
+};
+
+const getSuccessOrError = () => document.querySelector('.success') || document.querySelector('.error');
+
 
 const onDocumentKeydown = (evt) => {
-  if (isEscapeKey(evt)) {
+  if (isEscapeKey(evt) && getSuccessOrError() === null) {
     evt.preventDefault();
     closeEditForm();
   }
@@ -36,6 +50,59 @@ const pristine = new Pristine(editForm, {
   errorTextParent: 'img-upload__field-wrapper',
   errorTextTag: 'div'
 });
+
+
+const closeMessage = () => {
+  getSuccessOrError().remove();
+
+  document.removeEventListener('keydown', onMessageKeydown);
+  document.removeEventListener('click', onOutsideElement);
+
+};
+const onMessageClose = () => {
+  if(getSuccessOrError() !== null){
+    closeMessage();
+  }
+};
+
+function onMessageKeydown (evt){
+  if (isEscapeKey(evt)){
+    evt.preventDefault();
+    closeMessage();
+  }
+}
+function onOutsideElement (evt) {
+  const div = document.querySelector('.error__inner, success__inner');
+  if (evt.composedPath().includes(div)) {
+    return;
+  }
+  closeMessage();
+}
+
+const showSuccessMessage = () =>{
+  const successFragment = document.createDocumentFragment();
+  const successElement = successTemplate.cloneNode(true);
+  successFragment.appendChild(successElement);
+  document.body.appendChild(successFragment);
+  const successButton = document.querySelector('.success__button');
+
+  successButton.addEventListener('click', onMessageClose);
+  document.addEventListener('keydown', onMessageKeydown);
+  document.addEventListener('click', onOutsideElement);
+};
+
+const showError = () => {
+  const errorFragment = document.createDocumentFragment();
+  const errorElement = errorTemplate.cloneNode(true);
+  errorFragment.appendChild(errorElement);
+  document.body.appendChild(errorFragment);
+  const errorButton = document.querySelector('.error__button');
+
+  errorButton.addEventListener('click', onMessageClose);
+  document.addEventListener('keydown', onMessageKeydown);
+  document.addEventListener('click', onOutsideElement);
+
+};
 
 function closeEditForm() {
   uploadForm.classList.add('hidden');
@@ -68,13 +135,32 @@ pristine.addValidator(inputHashtag, validateTemplate, hashtagErrors.errorHashtag
 pristine.addValidator(inputHashtag, validateCount, hashtagErrors.errorCount);
 pristine.addValidator(inputHashtag, validateUnique, hashtagErrors.errorUnique);
 
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = SubmitButtonText.SENDING;
+};
 
-editForm.addEventListener('submit', (evt) =>{
-  if(!pristine.validate()){
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = SubmitButtonText.IDLE;
+};
+
+
+const setUserFormSubmit = (onSuccess) => {
+  editForm.addEventListener('submit', (evt) =>{
     evt.preventDefault();
-  }
-
-});
+    if(pristine.validate()){
+      blockSubmitButton();
+      sendData(new FormData(evt.target))
+        .then(showSuccessMessage)
+        .then(onSuccess)
+        .catch(() => {
+          showError();
+        })
+        .finally(unblockSubmitButton);
+    }
+  });
+};
 
 textarea.addEventListener('keydown', onTextKeydown);
 inputHashtag.addEventListener('keydown', onTextKeydown);
@@ -88,3 +174,5 @@ uploadFile.addEventListener('change', () =>{
 uploadCancelButton.addEventListener('click', () => {
   closeEditForm();
 });
+
+export {setUserFormSubmit, closeEditForm};
