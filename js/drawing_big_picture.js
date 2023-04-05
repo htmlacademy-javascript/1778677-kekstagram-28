@@ -4,7 +4,6 @@ import {renderThumbnails} from './drawing_thumbnails.js';
 
 const bigPicture = document.querySelector('.big-picture');
 
-
 const thumbnailContainer = document.querySelector('.pictures');
 const bigPictureCloseElement = document.querySelector('.big-picture__cancel');
 
@@ -35,9 +34,7 @@ const renderGallery = (pictures) =>{
     );
     openThumbnailElement(picture);
   });
-
 };
-
 
 function closeBigPictureElement(){
   bigPicture.classList.add('hidden');
