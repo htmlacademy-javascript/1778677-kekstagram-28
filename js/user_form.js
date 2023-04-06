@@ -2,6 +2,7 @@ import {isEscapeKey} from './util.js';
 import { resetScale } from './scale.js';
 import { resetEffects } from './effect.js';
 import {sendData} from './api.js';
+import { uploadPhoto } from './upload_photo.js';
 
 const MAX_LENGTH_COMMENT = 140;
 const MAX_HASHTAG_COUNT = 5;
@@ -169,6 +170,7 @@ uploadFile.addEventListener('change', () =>{
   uploadForm.classList.remove('hidden');
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeydown);
+  uploadPhoto();
 });
 
 uploadCancelButton.addEventListener('click', () => {
