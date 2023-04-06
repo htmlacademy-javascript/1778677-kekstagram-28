@@ -1,10 +1,10 @@
 import {isEscapeKey} from './util.js';
-import {renderBigPicture, onCommentLoad} from './big_picture.js';
-import {renderThumbnails} from './drawing_thumbnails.js';
+import {renderBigPicture, onCommentLoaderButtonClick} from './big-picture.js';
+import {renderThumbnails} from './drawing-thumbnails.js';
 
-const bigPicture = document.querySelector('.big-picture');
+const bigPictureElement = document.querySelector('.big-picture');
 
-const thumbnailContainer = document.querySelector('.pictures');
+const thumbnailContainerElement = document.querySelector('.pictures');
 const bigPictureCloseElement = document.querySelector('.big-picture__cancel');
 
 const onDocumentKeydown = (evt) => {
@@ -15,15 +15,15 @@ const onDocumentKeydown = (evt) => {
 };
 
 const openThumbnailElement = (picture) => {
-  bigPicture.classList.remove('hidden');
+  bigPictureElement.classList.remove('hidden');
   renderBigPicture(picture);
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
 const renderGallery = (pictures) =>{
-  renderThumbnails(pictures, thumbnailContainer);
-  thumbnailContainer.addEventListener('click', (evt) => {
+  renderThumbnails(pictures, thumbnailContainerElement);
+  thumbnailContainerElement.addEventListener('click', (evt) => {
     const thumbnail = evt.target.closest('[data-thumbnail-id]');
     if(!thumbnail){
       return;
@@ -37,10 +37,10 @@ const renderGallery = (pictures) =>{
 };
 
 function closeBigPictureElement(){
-  bigPicture.classList.add('hidden');
+  bigPictureElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
-  document.removeEventListener('click', onCommentLoad);
+  document.removeEventListener('click', onCommentLoaderButtonClick);
 
 }
 
