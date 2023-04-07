@@ -73,11 +73,9 @@ function onMessageKeydown (evt){
   }
 }
 function onOutsideElement (evt) {
-  const divElement = document.querySelector('.error__inner, success__inner');
-  if (evt.composedPath().includes(divElement)) {
-    return;
+  if (evt.target === getSuccessOrError()) {
+    closeMessage();
   }
-  closeMessage();
 }
 
 const showSuccessMessage = () =>{

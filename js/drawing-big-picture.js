@@ -7,6 +7,8 @@ const bigPictureElement = document.querySelector('.big-picture');
 const thumbnailContainerElement = document.querySelector('.pictures');
 const bigPictureCloseElement = document.querySelector('.big-picture__cancel');
 
+let newPictures = [];
+
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
@@ -21,19 +23,25 @@ const openThumbnailElement = (picture) => {
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
+const onThumbnailContainerElementClick = (evt) => {
+  const thumbnail = evt.target.closest('[data-thumbnail-id]');
+  if(!thumbnail){
+    return;
+  }
+  evt.preventDefault();
+  const picture = newPictures.find(
+    (item) => item.id === +thumbnail.dataset.thumbnailId
+  );
+  openThumbnailElement(picture);
+
+};
+
+
 const renderGallery = (pictures) =>{
+  newPictures = pictures;
   renderThumbnails(pictures, thumbnailContainerElement);
-  thumbnailContainerElement.addEventListener('click', (evt) => {
-    const thumbnail = evt.target.closest('[data-thumbnail-id]');
-    if(!thumbnail){
-      return;
-    }
-    evt.preventDefault();
-    const picture = pictures.find(
-      (item) => item.id === +thumbnail.dataset.thumbnailId
-    );
-    openThumbnailElement(picture);
-  });
+  thumbnailContainerElement.addEventListener('click', onThumbnailContainerElementClick);
+
 };
 
 function closeBigPictureElement(){
