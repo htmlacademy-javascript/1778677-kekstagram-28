@@ -51,12 +51,12 @@ const EFFECTS = [
 const DEFAULT_EFFECT = EFFECTS[0];
 let chosenEffect = DEFAULT_EFFECT;
 
-const editForm = document.querySelector('#upload-select-image');
-const sliderElement = editForm.querySelector('.effect-level__slider');
-const sliderContainerElement = editForm.querySelector('.img-upload__effect-level');
-const previewImg = editForm.querySelector('.img-upload__preview img');
-const effectElement = editForm.querySelector('.effects');
-const effectLevelElement = editForm.querySelector('.effect-level__value');
+const editFormElement = document.querySelector('#upload-select-image');
+const sliderElement = editFormElement.querySelector('.effect-level__slider');
+const sliderContainerElement = editFormElement.querySelector('.img-upload__effect-level');
+const previewImgElement = editFormElement.querySelector('.img-upload__preview img');
+const effectElement = editFormElement.querySelector('.effects');
+const effectLevelElement = editFormElement.querySelector('.effect-level__value');
 
 const isDefault = () => chosenEffect === DEFAULT_EFFECT;
 
@@ -85,20 +85,20 @@ const updateSlider = () => {
   }
 };
 
-const onEffectsChange = (evt) => {
+const onEffectElementChange = (evt) => {
   if(!evt.target.classList.contains('effects__radio')) {
     return;
   }
   chosenEffect = EFFECTS.find((effect) => effect.name === evt.target.value);
-  previewImg.className = `effects__preview--${chosenEffect.name}`;
+  previewImgElement.className = `effects__preview--${chosenEffect.name}`;
   updateSlider();
 };
 
-effectElement.addEventListener('change', onEffectsChange);
+effectElement.addEventListener('change', onEffectElementChange);
 
-const onSliderUpdate = () => {
+const onSliderElementUpdate = () => {
   const sliderValue = sliderElement.noUiSlider.get();
-  previewImg.style.filter = isDefault()
+  previewImgElement.style.filter = isDefault()
     ? DEFAULT_EFFECT.style : `${chosenEffect.style}(${sliderValue}${chosenEffect.unit})`;
   effectLevelElement.value = sliderValue;
 };
@@ -120,7 +120,7 @@ noUiSlider.create(sliderElement, {
 
 hideSlider();
 
-effectElement.addEventListener('change', onEffectsChange);
-sliderElement.noUiSlider.on('update', onSliderUpdate);
+effectElement.addEventListener('change', onEffectElementChange);
+sliderElement.noUiSlider.on('update', onSliderElementUpdate);
 
 export {resetEffects};

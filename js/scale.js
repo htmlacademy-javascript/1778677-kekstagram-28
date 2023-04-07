@@ -3,31 +3,31 @@ const MIN_SCALE = 25;
 const MAX_SCALE = 100;
 const DEFAULT_SCALE = 100;
 
-const editForm = document.querySelector('#upload-select-image');
-const scaleControlSmallerButton = editForm.querySelector('.scale__control--smaller');
-const scaleControlBiggerButton = editForm.querySelector('.scale__control--bigger');
-const scaleControlValue = editForm.querySelector('.scale__control--value');
-const previewImg = editForm.querySelector('.img-upload__preview img');
+const editFormElement = document.querySelector('#upload-select-image');
+const scaleControlSmallerButtonElement = editFormElement.querySelector('.scale__control--smaller');
+const scaleControlBiggerButtonElement = editFormElement.querySelector('.scale__control--bigger');
+const scaleControlValueElement = editFormElement.querySelector('.scale__control--value');
+const previewImgElement = editFormElement.querySelector('.img-upload__preview img');
 
 const scaleImage = (value) => {
-  previewImg.style.transform = `scale(${value / 100})`;
-  scaleControlValue.value = `${value}%`;
+  previewImgElement.style.transform = `scale(${value / 100})`;
+  scaleControlValueElement.value = `${value}%`;
 };
 
-scaleControlSmallerButton.addEventListener('click', () =>{
-  const scaleValue = +/\d+/.exec(scaleControlValue.value);
+scaleControlSmallerButtonElement.addEventListener('click', () =>{
+  const scaleValue = +/\d+/.exec(scaleControlValueElement.value);
   const newValue = scaleValue - SCALE_STEP;
   if(scaleValue > MIN_SCALE){
-    scaleControlValue.value = `${newValue}%`;
+    scaleControlValueElement.value = `${newValue}%`;
     scaleImage(newValue);
   }
 });
 
-scaleControlBiggerButton.addEventListener('click', () =>{
-  const scaleValue = +/\d+/.exec(scaleControlValue.value);
+scaleControlBiggerButtonElement.addEventListener('click', () =>{
+  const scaleValue = +/\d+/.exec(scaleControlValueElement.value);
   const newValue = scaleValue + SCALE_STEP;
   if(scaleValue < MAX_SCALE){
-    scaleControlValue.value = `${newValue}%`;
+    scaleControlValueElement.value = `${newValue}%`;
     scaleImage(newValue);
   }
 });

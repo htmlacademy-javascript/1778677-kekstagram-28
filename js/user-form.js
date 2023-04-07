@@ -2,28 +2,28 @@ import {isEscapeKey} from './util.js';
 import { resetScale } from './scale.js';
 import { resetEffects } from './effect.js';
 import {sendData} from './api.js';
-import { uploadPhoto } from './upload_photo.js';
+import { uploadPhoto } from './upload-photo.js';
 
 const MAX_LENGTH_COMMENT = 140;
 const MAX_HASHTAG_COUNT = 5;
-const uploadFile = document.querySelector('#upload-file');
-const uploadForm = document.querySelector('.img-upload__overlay');
-const uploadCancelButton = document.querySelector('#upload-cancel');
-const editForm = document.querySelector('#upload-select-image');
-const inputHashtag = document.querySelector('.text__hashtags');
-const textarea = editForm.querySelector('.text__description');
+const uploadFileElement = document.querySelector('#upload-file');
+const uploadFormElement = document.querySelector('.img-upload__overlay');
+const uploadCancelButtonElement = document.querySelector('#upload-cancel');
+const editFormElement = document.querySelector('#upload-select-image');
+const inputHashtagElement = document.querySelector('.text__hashtags');
+const textareaElement = editFormElement.querySelector('.text__description');
 const hashtagTemplate = /^#[a-zа-яё0-9]{1,19}$/i;
 const textareaError = 'не более 140 символов';
-const hashtagErrors = {
-  errorHashtag : 'Хэш-тег не соответствует требованиям: хэш-тег начинается с символа # (решётка), хэш-теги должны состоять только из букв и чисел, хеш-тег не может состоять только из одной решётки, максимальная длина одного хэш-тега 20 символов, включая решётку',
-  errorCount : 'нельзя указать больше пяти хэш-тегов',
-  errorUnique: 'хэш-теги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом, один и тот же хэш-тег не может быть использован дважды',
+const HashtagError = {
+  ERRORHASHTAG : 'Хэш-тег не соответствует требованиям: хэш-тег начинается с символа # (решётка), хэш-теги должны состоять только из букв и чисел, хеш-тег не может состоять только из одной решётки, максимальная длина одного хэш-тега 20 символов, включая решётку',
+  ERRORCOUNT : 'нельзя указать больше пяти хэш-тегов',
+  ERRORUNIQUE: 'хэш-теги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом, один и тот же хэш-тег не может быть использован дважды',
 };
-const submitButton = editForm.querySelector('.img-upload__submit');
+const submitButtonElement = editFormElement.querySelector('.img-upload__submit');
 
-const successTemplate = document.querySelector('#success').content.querySelector('.success');
+const successTemplateElement = document.querySelector('#success').content.querySelector('.success');
 
-const errorTemplate = document.querySelector('#error').content.querySelector('.error');
+const errorTemplateElement = document.querySelector('#error').content.querySelector('.error');
 
 const SubmitButtonText = {
   IDLE: 'ОПУБЛИКОВАТЬ',
@@ -40,13 +40,13 @@ const onDocumentKeydown = (evt) => {
   }
 };
 
-const onTextKeydown = (evt) => {
+const onTextareaKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.stopPropagation();
   }
 };
 
-const pristine = new Pristine(editForm, {
+const pristine = new Pristine(editFormElement, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
   errorTextTag: 'div'
@@ -60,7 +60,7 @@ const closeMessage = () => {
   document.removeEventListener('click', onOutsideElement);
 
 };
-const onMessageClose = () => {
+const onButtonClose = () => {
   if(getSuccessOrError() !== null){
     closeMessage();
   }
@@ -73,8 +73,8 @@ function onMessageKeydown (evt){
   }
 }
 function onOutsideElement (evt) {
-  const div = document.querySelector('.error__inner, success__inner');
-  if (evt.composedPath().includes(div)) {
+  const divElement = document.querySelector('.error__inner, success__inner');
+  if (evt.composedPath().includes(divElement)) {
     return;
   }
   closeMessage();
@@ -82,34 +82,34 @@ function onOutsideElement (evt) {
 
 const showSuccessMessage = () =>{
   const successFragment = document.createDocumentFragment();
-  const successElement = successTemplate.cloneNode(true);
+  const successElement = successTemplateElement.cloneNode(true);
   successFragment.appendChild(successElement);
   document.body.appendChild(successFragment);
-  const successButton = document.querySelector('.success__button');
+  const successButtonElement = document.querySelector('.success__button');
 
-  successButton.addEventListener('click', onMessageClose);
+  successButtonElement.addEventListener('click', onButtonClose);
   document.addEventListener('keydown', onMessageKeydown);
   document.addEventListener('click', onOutsideElement);
 };
 
 const showError = () => {
   const errorFragment = document.createDocumentFragment();
-  const errorElement = errorTemplate.cloneNode(true);
+  const errorElement = errorTemplateElement.cloneNode(true);
   errorFragment.appendChild(errorElement);
   document.body.appendChild(errorFragment);
-  const errorButton = document.querySelector('.error__button');
+  const errorButtonElement = document.querySelector('.error__button');
 
-  errorButton.addEventListener('click', onMessageClose);
+  errorButtonElement.addEventListener('click', onButtonClose);
   document.addEventListener('keydown', onMessageKeydown);
   document.addEventListener('click', onOutsideElement);
 
 };
 
 function closeEditForm() {
-  uploadForm.classList.add('hidden');
+  uploadFormElement.classList.add('hidden');
   document.querySelector('body').classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
-  editForm.reset();
+  editFormElement.reset();
   pristine.reset();
   resetScale();
   resetEffects();
@@ -130,25 +130,25 @@ const validateUnique = (value) => {
   return lowerCaseTags.length === new Set(lowerCaseTags).size;
 };
 
-pristine.addValidator(textarea, validateTextarea, textareaError);
+pristine.addValidator(textareaElement, validateTextarea, textareaError);
 
-pristine.addValidator(inputHashtag, validateTemplate, hashtagErrors.errorHashtag);
-pristine.addValidator(inputHashtag, validateCount, hashtagErrors.errorCount);
-pristine.addValidator(inputHashtag, validateUnique, hashtagErrors.errorUnique);
+pristine.addValidator(inputHashtagElement, validateTemplate, HashtagError.ERRORHASHTAG);
+pristine.addValidator(inputHashtagElement, validateCount, HashtagError.ERRORCOUNT);
+pristine.addValidator(inputHashtagElement, validateUnique, HashtagError.ERRORUNIQUE);
 
 const blockSubmitButton = () => {
-  submitButton.disabled = true;
-  submitButton.textContent = SubmitButtonText.SENDING;
+  submitButtonElement.disabled = true;
+  submitButtonElement.textContent = SubmitButtonText.SENDING;
 };
 
 const unblockSubmitButton = () => {
-  submitButton.disabled = false;
-  submitButton.textContent = SubmitButtonText.IDLE;
+  submitButtonElement.disabled = false;
+  submitButtonElement.textContent = SubmitButtonText.IDLE;
 };
 
 
 const setUserFormSubmit = (onSuccess) => {
-  editForm.addEventListener('submit', (evt) =>{
+  editFormElement.addEventListener('submit', (evt) =>{
     evt.preventDefault();
     if(pristine.validate()){
       blockSubmitButton();
@@ -163,17 +163,17 @@ const setUserFormSubmit = (onSuccess) => {
   });
 };
 
-textarea.addEventListener('keydown', onTextKeydown);
-inputHashtag.addEventListener('keydown', onTextKeydown);
+textareaElement.addEventListener('keydown', onTextareaKeydown);
+inputHashtagElement.addEventListener('keydown', onTextareaKeydown);
 
-uploadFile.addEventListener('change', () =>{
-  uploadForm.classList.remove('hidden');
+uploadFileElement.addEventListener('change', () =>{
+  uploadFormElement.classList.remove('hidden');
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeydown);
   uploadPhoto();
 });
 
-uploadCancelButton.addEventListener('click', () => {
+uploadCancelButtonElement.addEventListener('click', () => {
   closeEditForm();
 });
 
